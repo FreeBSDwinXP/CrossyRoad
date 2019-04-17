@@ -61,7 +61,6 @@ function setup() {
     }
     line.container.y = linePosY;
     lines.push(line);
-    console.log(lines);
     app.stage.addChild(line.container);
     linePosY += height/10;
 
@@ -69,14 +68,15 @@ function setup() {
 
   )
   
-  cat = new Sprite(resources["images/cat.png"].texture);
+  /*cat = new Sprite(resources["images/cat.png"].texture);
   cat.position.set(width/2, height/10*9);
   cat.scale.set(0.08, 0.07);
-  app.stage.addChild(cat);
+  app.stage.addChild(cat);*/
   
   
   fps60();
-  app.renderer.render(app.stage);  
+  //app.renderer.render(app.stage);
+  //app.render(stage);
 }
 
 function fps60() {
@@ -84,19 +84,12 @@ function fps60() {
 
   
   requestAnimationFrame (fps60);
-  cat.x += 1;
+  //cat.x += 5;
   lines.forEach((item) => 
   {
-    item.update();
-    //console.log(item.update)
-    
+    item.animate();
   });
-  /*lines.forEach((line)=> 
-  {
-    line.update();
-    //console.log(line.animate);
-  });*/
-  app.renderer.render(app.stage);
+  //app.renderer.render(app.stage);
 }
 
 //The `randomInt` helper function

@@ -9,6 +9,11 @@ class grass {
         //grass.position.set(0, 0)
         //app.stage.addChild(grass);
         
+        
 
+    }
+
+    animate() {
+        
     }
 }

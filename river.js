@@ -11,4 +11,8 @@ class river {
         
 
     }
+
+    animate() {
+        
+    }
 }
