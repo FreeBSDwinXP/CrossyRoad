@@ -61,6 +61,7 @@ function setup() {
     }
     line.container.y = linePosY;
     lines.push(line);
+    console.log(lines);
     app.stage.addChild(line.container);
     linePosY += height/10;
 
@@ -75,16 +76,27 @@ function setup() {
   
   
   fps60();
-    
+  app.renderer.render(app.stage);  
 }
 
 function fps60() {
+  
 
-  lines.forEach((line)=> {
-    line.animate;
-  });
+  
   requestAnimationFrame (fps60);
   cat.x += 1;
+  lines.forEach((item) => 
+  {
+    item.update();
+    //console.log(item.update)
+    
+  });
+  /*lines.forEach((line)=> 
+  {
+    line.update();
+    //console.log(line.animate);
+  });*/
+  app.renderer.render(app.stage);
 }
 
 //The `randomInt` helper function
