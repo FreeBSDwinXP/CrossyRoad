@@ -34,8 +34,8 @@ PIXI.loader
   .add("images/car_left.png")
   .add("images/car_right.png")
   .add("images/cat.png")
-  //.add("images/tree.png")
-  //.add("images/wood.png")
+  .add("images/tree.png")
+  .add("images/wood.png")
   .load(setup);
 
 let cat;
@@ -66,7 +66,7 @@ function setup() {
 
   }
 
-  )
+  );
   
   /*cat = new Sprite(resources["images/cat.png"].texture);
   cat.position.set(width/2, height/10*9);
