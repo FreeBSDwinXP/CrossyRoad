@@ -4,5 +4,7 @@ let config = {
     width: 600,
     height: 400,
     treeMin: 3,
-    treeMax: 6
+    treeMax: 6,
+    speedCar: 1.3,
+    speedBalks: 0.55
 };
