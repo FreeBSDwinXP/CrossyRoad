@@ -14,7 +14,8 @@ let Application = PIXI.Application,
   width = config.width, // Global width game field
   height = config.height,// Global height game field
   lines = [],
-  cat;
+  //hitCheck,
+  gamer;
 
 
 
@@ -54,8 +55,8 @@ function setup() {
       case "grass":
         line = new Grass();
         if (index == 9) {
-          line.trees.forEach(elem => elem.destroy());
-          line.trees.length = 0;
+          line.elements.forEach(elem => elem.destroy());
+          line.elements.length = 0;
         }
         break;
     }
@@ -64,15 +65,48 @@ function setup() {
     app.stage.addChild(line.container);
     linePosY += height / 10;
   });
-  cat = new Cat();
+  gamer = new Cat();
   fps60();
 }
 
+function onHit (elem, massif) {
+  //let hitCheck = 0;
+
+  if (massif.forEach((masElem) => {
+    //console.log('hitCheck Before = ', hitCheck);
+    //console.log(elem.x, elem.y, elem.width, elem.height, masElem.type, masElem.x, masElem.getGlobalPosition().x, masElem.getGlobalPosition().y, masElem.width, masElem.height);
+    if (hitTestRectangle(elem, masElem)) {
+      console.log("hit on ", masElem.type);
+      return true;
+      
+    } else {
+      //
+      //console.log('hitCheck else = ', hitCheck);
+    }
+  })) {
+    return true;
+  } 
+
+  
+  //return hitCheck;
+}
+
 function fps60() {
+  
   requestAnimationFrame(fps60);
-  cat.animate();
+  gamer.animate();
+  //console.log(gamer.cat.x);
+  /*if (hitCheck === 1) {
+    console.log('HIT');
+  }*/
   lines.forEach((item) => {
+    if (onHit(gamer.cat, item.elements)) {
+      console.log ('YES');
+
+    }
+    
     item.animate();
+    
   });
 }
 
@@ -89,4 +123,56 @@ function testFreeSpace(massif, newSprite) {
   function ArrTest (oldSprite) {
   return newSprite.x < oldSprite.x-oldSprite.width*1.1 || newSprite.x > oldSprite.x+oldSprite.width*1.1
   }
+}
+
+//Test elements on Hit action
+function hitTestRectangle(r1, r2) {
+
+  //Define the variables we'll need to calculate
+  let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+
+  //hit will determine whether there's a collision
+  hit = false;
+
+  //Find the center points of each sprite
+  r1.centerX = r1.x + r1.width / 2;
+  r1.centerY = r1.y + r1.height / 2;
+  r2.centerX = r2.x + r2.width / 2;
+  r2.centerY = r2.getGlobalPosition().y + r2.height / 2;
+
+  //Find the half-widths and half-heights of each sprite
+  r1.halfWidth = r1.width / 2;
+  r1.halfHeight = r1.height / 2;
+  r2.halfWidth = r2.width / 2;
+  r2.halfHeight = r2.height / 2;
+
+  //Calculate the distance vector between the sprites
+  vx = r1.centerX - r2.centerX;
+  vy = r1.centerY - r2.centerY;
+
+  //Figure out the combined half-widths and half-heights
+  combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+  combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+  //Check for a collision on the x axis
+  if (Math.abs(vx) < combinedHalfWidths) {
+
+    //A collision might be occurring. Check for a collision on the y axis
+    if (Math.abs(vy) < combinedHalfHeights) {
+
+      //There's definitely a collision happening
+      hit = true;
+    } else {
+
+      //There's no collision on the y axis
+      hit = false;
+    }
+  } else {
+
+    //There's no collision on the x axis
+    hit = false;
+  }
+
+  //`hit` will be either `true` or `false`
+  return hit;
 }

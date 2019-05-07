@@ -62,7 +62,7 @@ class Cat
         if (key.keyCode == 37 || key.keyCode == 39)  // ArrowLeft = 37; ArrowRight = 39;
             {
             this.directionX = this.keyCodes[key.keyCode];
-            ride = false;  // this used for mooving on woods
+            //ride = false;  // this used for mooving on woods
             }
         else if (key.keyCode == 38 || key.keyCode == 40) // ArrowUp = 38; ArrowDown = 40;
             this.directionY = this.keyCodes[key.keyCode];

@@ -7,19 +7,20 @@ class Grass {
         this.lawn.endFill();//End fill
         this.container.addChild(this.lawn);//Add line to container
         this.woods = randomInt(config.treeMin, config.treeMax);
-        this.trees = [];//Create massif for trees
+        this.elements = [];//Create massif for trees
         (function() {
             do {
                 let pos = randomInt(0, width * .9);
-                this.tree = new Sprite(resources["images/tree.png"].texture);//Bind image to tree
-                this.tree.position.set(pos, 0);//Locate tree in container
-                this.tree.scale.set(width * 0.0007, height * 0.0009);//Zoom tree to our game field
-                if (testFreeSpace(this.trees, this.tree)
+                this.element = new Sprite(resources["images/tree.png"].texture);//Bind image to tree
+                this.element.position.set(pos, 0);//Locate tree in container
+                this.element.scale.set(width * 0.0007, height * 0.0009);//Zoom tree to our game field
+                this.element.type = 'tree';
+                if (testFreeSpace(this.elements, this.element)
                 ) {
-                    this.trees.push(this.tree);//Add tree in massif for this container
-                    this.container.addChild(this.tree);//Add tree in this container
+                    this.elements.push(this.element);//Add tree in massif for this container
+                    this.container.addChild(this.element);//Add tree in this container
                 }
-            } while (this.trees.length < this.woods);
+            } while (this.elements.length < this.woods);
         }.bind(this))();
     }
 
