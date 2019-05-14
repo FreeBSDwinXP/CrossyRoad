@@ -1,11 +1,11 @@
 class Traffic {
     constructor() {//Create cars and road
         this.container = new Container(); //Create container for line
-        this.road = new Graphics();//Create new line
-        this.road.beginFill(0x616B5D);//Start fill and set gray color
-        this.road.drawRect(0, 0, width, height/10);//Draw the rectangle
-        this.road.endFill();//End fill
-        this.container.addChild(this.road);//Add line to container
+        this.line = new Graphics();//Create new line
+        this.line.beginFill(0x616B5D);//Start fill and set gray color
+        this.line.drawRect(0, 0, width, height/10);//Draw the rectangle
+        this.line.endFill();//End fill
+        this.container.addChild(this.line);//Add line to container
         this.elements = [];//Create massif for cars
         this.moveDirection = Math.random() < 0.5 ? -1 : 1;//Random move direction
         this.speed = randomInt(0.8,1.5);

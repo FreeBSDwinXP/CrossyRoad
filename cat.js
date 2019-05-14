@@ -5,14 +5,14 @@ class Cat
         this.cat = new Sprite(resources["images/cat.png"].texture);
 
         this.cat.position.set(width * 0.5, height * 0.9);
-        this.cat.scale.set(width*0.00008, height*0.0001);
+        this.cat.scale.set(width*0.00007, height*0.00009);
         
         this.keyState = {32: false, 37: false, 38: false, 39: false, 40: false};
         this.keyCodes = {37: -1, 38: -1, 39: 1, 40: 1};
 
         this.directionX = 0;
         this.directionY = 0;
-        this.speed = 3;
+        this.speed = config.speedPlayer;
         this.cat.preX = this.cat.x;
         this.cat.preY = this.cat.y;
 
@@ -32,6 +32,7 @@ class Cat
 
         this.cat.preX = this.cat.x;
         this.cat.preY = this.cat.y;
+        
         // Prevent from leaving the screen
         if (nextX > 0 && nextX < width) {
             this.cat.position.x = nextX;
@@ -39,7 +40,7 @@ class Cat
         if (nextY > 0 && nextY < height) {
             this.cat.position.y = nextY;
         }
-
+  
         this.updateFire();  // Just one Easter Egg 
     }
 

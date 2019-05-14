@@ -1,11 +1,11 @@
 class River {
     constructor() {
         this.container = new Container(); //Create container for line
-        this.water = new Graphics();//Create new line
-        this.water.beginFill(0x0F13EE);//Start fill and set blue color to the next drawings
-        this.water.drawRect(0, 0, width, height/10);//Draw the rectangle
-        this.water.endFill();//End fill
-        this.container.addChild(this.water);//Add line to container
+        this.line = new Graphics();//Create new line
+        this.line.beginFill(0x0F13EE);//Start fill and set blue color to the next drawings
+        this.line.drawRect(0, 0, width, height/10);//Draw the rectangle
+        this.line.endFill();//End fill
+        this.container.addChild(this.line);//Add line to container
         this.elements = [];//Create massif for balks
         this.moveDirection = Math.random() < 0.5 ? -1 : 1;//Random move direction
         this.speed = randomInt(0.8,1.2);

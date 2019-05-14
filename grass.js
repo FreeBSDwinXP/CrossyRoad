@@ -1,11 +1,11 @@
 class Grass {
     constructor() {
         this.container = new Container(); //Create container for line
-        this.lawn = new Graphics();//Create new line
-        this.lawn.beginFill(0x4FEE0F);//Start fill and set green color to the next drawings
-        this.lawn.drawRect(0, 0, width, height / 10);//Draw the rectangle
-        this.lawn.endFill();//End fill
-        this.container.addChild(this.lawn);//Add line to container
+        this.line = new Graphics();//Create new line
+        this.line.beginFill(0x4FEE0F);//Start fill and set green color to the next drawings
+        this.line.drawRect(0, 0, width, height / 10);//Draw the rectangle
+        this.line.endFill();//End fill
+        this.container.addChild(this.line);//Add line to container
         this.woods = randomInt(config.treeMin, config.treeMax);
         this.elements = [];//Create massif for trees
         (function() {

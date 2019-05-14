@@ -14,7 +14,8 @@ let Application = PIXI.Application,
   width = config.width, // Global width game field
   height = config.height,// Global height game field
   lines = [],
-  //hitCheck,
+  lifes = config.lifes,
+  noswim = false,
   gamer;
 
 
@@ -69,43 +70,55 @@ function setup() {
   fps60();
 }
 
-function onHit (elem, massif) {
-  //let hitCheck = 0;
+function onHit (elem, massif, type) {
+  if (hitTestRectangle(type, elem) && type instanceof River) {
 
-  if (massif.forEach((masElem) => {
-    //console.log('hitCheck Before = ', hitCheck);
-    //console.log(elem.x, elem.y, elem.width, elem.height, masElem.type, masElem.x, masElem.getGlobalPosition().x, masElem.getGlobalPosition().y, masElem.width, masElem.height);
+  }
+  //console.log(type.line.width, type.line.height);
+  
+  massif.forEach((masElem) => {
     if (hitTestRectangle(elem, masElem)) {
-      console.log("hit on ", masElem.type);
-      return true;
-      
+      if (masElem.type == 'tree') {
+        elem.x = elem.preX;
+        elem.y = elem.preY;
+      } else if (masElem.type == 'wood') {
+        elem.x = masElem.x+masElem.width/2-elem.width/2;
+        noswim = true;
+      } else if (masElem.type == 'car') {
+        lost(elem);
+        //return;
+      }
     } else {
       //
       //console.log('hitCheck else = ', hitCheck);
     }
-  })) {
-    return true;
-  } 
+  }); 
+}
 
-  
-  //return hitCheck;
+function lost(play) {
+  play.position.set(width * 0.5, height * 0.905);
+  lifes -= 1;
+  console.log('-- YOU LOOSER -- and have only     ' + lifes + '    lifes');
 }
 
 function fps60() {
   
   requestAnimationFrame(fps60);
   gamer.animate();
-  //console.log(gamer.cat.x);
-  /*if (hitCheck === 1) {
-    console.log('HIT');
-  }*/
+  
   lines.forEach((item) => {
-    if (onHit(gamer.cat, item.elements)) {
-      console.log ('YES');
-
-    }
-    
+    onHit(gamer.cat, item.elements, item.container);
+    /*if (hitTestRectangle(item.container, gamer.cat)) {
+      if (item instanceof River) {
+        console.log('hit on river', item.line);
+        ride = false;
+      }
+      //console.log('hit on ', item.line);
+      //console.log('1');
+      //line instanceof River
+    }*/
     item.animate();
+    noswim = false;
     
   });
 }
