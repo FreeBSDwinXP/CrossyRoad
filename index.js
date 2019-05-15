@@ -15,7 +15,7 @@ let Application = PIXI.Application,
   height = config.height,// Global height game field
   lines = [],
   lifes = config.lifes,
-  noswim = false,
+  hitTree = false,
   gamer;
 
 
@@ -71,32 +71,32 @@ function setup() {
 }
 
 function onHit (elem, massif, type) {
-  if (hitTestRectangle(type, elem) && type instanceof River) {
-
-  }
-  //console.log(type.line.width, type.line.height);
-  
   massif.forEach((masElem) => {
     if (hitTestRectangle(elem, masElem)) {
       if (masElem.type == 'tree') {
+        hitTree = true;
+        console.log('tree');
         elem.x = elem.preX;
         elem.y = elem.preY;
       } else if (masElem.type == 'wood') {
-        elem.x = masElem.x+masElem.width/2-elem.width/2;
-        noswim = true;
+        if (hitTree) {
+          elem.x = elem.preX;
+        } else {
+          elem.x = masElem.x+masElem.width/2-elem.width/2;
+          console.log(elem.onTree);
+          console.log('wood');
+        }
+        elem.onWood = true;
       } else if (masElem.type == 'car') {
         lost(elem);
-        //return;
+        console.log('cat lost one of his life under the whils on the road... RIP');
       }
-    } else {
-      //
-      //console.log('hitCheck else = ', hitCheck);
-    }
+    } 
   }); 
 }
 
 function lost(play) {
-  play.position.set(width * 0.5, height * 0.905);
+  play.position.set(width * 0.5, height * 0.92);
   lifes -= 1;
   console.log('-- YOU LOOSER -- and have only     ' + lifes + '    lifes');
 }
@@ -105,21 +105,28 @@ function fps60() {
   
   requestAnimationFrame(fps60);
   gamer.animate();
+
+  
+  
+  if (gamer.cat.x < 0 || gamer.cat.x > width-gamer.cat.width) {
+    lost(gamer.cat);
+    console.log('oops you ride away');
+  }
   
   lines.forEach((item) => {
     onHit(gamer.cat, item.elements, item.container);
-    /*if (hitTestRectangle(item.container, gamer.cat)) {
-      if (item instanceof River) {
-        console.log('hit on river', item.line);
-        ride = false;
+    if (hitTestRectangle(item.container, gamer.cat) && item instanceof River) {
+      if (!gamer.cat.onWood) {
+        lost(gamer.cat);
+        console.log('cat can not swim');
       }
-      //console.log('hit on ', item.line);
-      //console.log('1');
-      //line instanceof River
-    }*/
+    }
     item.animate();
-    noswim = false;
-    
+    if (gamer.cat.onWood && gamer.cat.onTree) {
+      console.log('tree+wood'); 
+    }
+    gamer.cat.onWood = false;
+    hitTree = false;
   });
 }
 
