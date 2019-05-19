@@ -9,6 +9,7 @@ class Traffic {
         this.elements = [];//Create massif for cars
         this.moveDirection = Math.random() < 0.5 ? -1 : 1;//Random move direction
         this.speed = randomInt(0.8,1.5);
+        this.alreadyCreate = false;
         
         window.setInterval(function() {
             setTimeout(() => 
@@ -41,12 +42,11 @@ class Traffic {
     {
         this.elements.forEach(function(elem, index, array)//for each car in massif
         {
-            elem.position.x += elem.moveDirection*config.speedCar*elem.speed;//move car
+            elem.position.x += elem.moveDirection*speedCar*elem.speed;//move car
             if (elem.position.x < -elem.width*2.4 || elem.position.x > width+elem.width)//Border life of cars
             {
                 elem.destroy();//Delete car from container
                 array.splice(index, 1);//Delete car from massif
-                //console.log('car destroy in direction ' + elem.moveDirection);//Logging
             }
         }.bind(this));
     }

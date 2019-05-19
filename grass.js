@@ -8,6 +8,8 @@ class Grass {
         this.container.addChild(this.line);//Add line to container
         this.woods = randomInt(config.treeMin, config.treeMax);
         this.elements = [];//Create massif for trees
+        this.alreadyCreate = false;
+        
         (function() {
             do {
                 let pos = randomInt(0, width * .9);

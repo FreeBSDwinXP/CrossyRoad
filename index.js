@@ -15,7 +15,11 @@ let Application = PIXI.Application,
   height = config.height,// Global height game field
   lines = [],
   lifes = config.lifes,
-  hitTree = false,
+  createLine = 0,
+  speedBalks = config.speedBalks,
+  speedCar = config.speedCar,
+  level = 1,
+  score = 0,
   gamer;
 
 
@@ -41,80 +45,140 @@ PIXI.loader
   .add("images/wood.png")
   .load(setup);
 
-function setup() {
 
-  let linePosY = 0;
-  config.relief.forEach(function (typeRelief, index) {
-    let line;
-    switch (typeRelief) {
-      case "traffic":
-        line = new Traffic();
-        break;
-      case "river":
-        line = new River();
-        break;
-      case "grass":
-        line = new Grass();
-        if (index == 9) {
-          line.elements.forEach(elem => elem.destroy());
-          line.elements.length = 0;
-        }
-        break;
-    }
-    line.container.y = linePosY;
-    lines.push(line);
-    app.stage.addChild(line.container);
-    linePosY += height / 10;
-  });
-  gamer = new Cat();
-  fps60();
+  
+
+
+
+function infoText() {
+  let style = new TextStyle({
+    fontFamily: "Arial",
+    fontSize: 20,
+    fill: "white",
+    stroke: '#ff3300',
+    strokeThickness: 4,
+    dropShadow: true,
+    dropShadowColor: "#000000",
+    dropShadowBlur: 4,
+    dropShadowAngle: Math.PI / 6,
+    dropShadowDistance: 6,
+    }),
+    message = new Text(`Level ${level} Lifes ${lifes} Score ${score}`, style);
+    message.position.set(10, 10);
+    app.stage.addChild(message);
 }
 
-function onHit (elem, massif, type) {
+function correctCreation(lin, ind) {
+  createLine += 1;
+  lin.container.y = height / 10 * ind;
+}
+
+function createGrass() {
+  config.relief.forEach(function (typeRelief, index) {
+    if (typeRelief == 'grass') {
+      let line = new Grass();
+      correctCreation(line, index);
+      if (index == 9) {
+        line.elements.forEach(elem => elem.destroy());
+        line.elements.length = 0;
+      }
+      lines.push(line);
+      app.stage.addChild(line.container);
+    }
+  });
+}
+
+function createRiverTraffic () {
+  config.relief.forEach(function (typeRelief, index) {
+    if (typeRelief != "grass") {
+      let line;
+      switch (typeRelief) {
+        case "traffic":
+          line = new Traffic();
+          break;
+        case "river":
+          line = new River();
+          break;
+      }
+      correctCreation(line, index);
+      lines.push(line);
+      app.stage.addChild(line.container);
+    } else {
+    }
+  });
+}
+
+function calculateGrass() {
+  let gr = 0;
+  config.relief.forEach(function (typeRelief) {
+    if (typeRelief == 'grass') {
+      gr += 1;
+    }
+  });
+  return gr;
+}
+
+function setup() {
+  while (createLine < config.relief.length - calculateGrass()) {
+      createRiverTraffic();
+    }
+    createGrass();
+  gamer = new Cat();
+  fps60();
+  infoText();
+}
+
+function onHit (elem, massif) {
   massif.forEach((masElem) => {
     if (hitTestRectangle(elem, masElem)) {
       if (masElem.type == 'tree') {
-        hitTree = true;
-        console.log('tree');
         elem.x = elem.preX;
         elem.y = elem.preY;
       } else if (masElem.type == 'wood') {
-        if (hitTree) {
-          elem.x = elem.preX;
-        } else {
-          elem.x = masElem.x+masElem.width/2-elem.width/2;
-          console.log(elem.onTree);
-          console.log('wood');
-        }
+        elem.x = elem.x + masElem.moveDirection*speedBalks*masElem.speed;
         elem.onWood = true;
       } else if (masElem.type == 'car') {
         lost(elem);
-        console.log('cat lost one of his life under the whils on the road... RIP');
+        console.log('cat lost one of his life under the wheels on the road... RIP');
       }
-    } 
-  }); 
+    }
+  });
 }
+
 
 function lost(play) {
   play.position.set(width * 0.5, height * 0.92);
   lifes -= 1;
-  console.log('-- YOU LOOSER -- and have only     ' + lifes + '    lifes');
+  infoText();
+}
+
+function win(play) {
+  play.position.set(width * 0.5, height * 0.92);
+  lifes += 1;
+  level += 1;
+  speedBalks += 0.1;
+  speedCar += 0.1;
+  infoText();
 }
 
 function fps60() {
-  
   requestAnimationFrame(fps60);
   gamer.animate();
 
-  
-  
   if (gamer.cat.x < 0 || gamer.cat.x > width-gamer.cat.width) {
     lost(gamer.cat);
     console.log('oops you ride away');
   }
+
+  if (gamer.cat.y < height/10-gamer.cat.height) {
+    win(gamer.cat);
+    console.log('win');
+    
+  }
+  
   
   lines.forEach((item) => {
-    onHit(gamer.cat, item.elements, item.container);
+    onHit(gamer.cat, item.elements);
     if (hitTestRectangle(item.container, gamer.cat) && item instanceof River) {
       if (!gamer.cat.onWood) {
         lost(gamer.cat);
@@ -122,13 +186,11 @@ function fps60() {
       }
     }
     item.animate();
-    if (gamer.cat.onWood && gamer.cat.onTree) {
-      console.log('tree+wood'); 
-    }
     gamer.cat.onWood = false;
-    hitTree = false;
   });
 }
+
+
 
 //The `randomInt` helper function
 function randomInt(min, max) {

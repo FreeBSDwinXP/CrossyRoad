@@ -9,6 +9,7 @@ class River {
         this.elements = [];//Create massif for balks
         this.moveDirection = Math.random() < 0.5 ? -1 : 1;//Random move direction
         this.speed = randomInt(0.8,1.2);
+        this.alreadyCreate = false;
 
         window.setInterval(function() {
             setTimeout(() => 
@@ -38,12 +39,11 @@ class River {
     animate() {
         this.elements.forEach(function(elem, index, array)//for each balk in massif
         {
-            elem.position.x += elem.moveDirection*config.speedBalks*elem.speed;//move balk
+            elem.position.x += elem.moveDirection*speedBalks*elem.speed;//move balk
             if (elem.position.x < -elem.width*2.4 || elem.position.x > width+elem.width)//Border life of balks
             {
                 elem.destroy();//Delete balk from container
                 array.splice(index, 1);//Delete balk from massif
-                //console.log('balk destroy in direction ' + elem.moveDirection);//Logging
             }
         }.bind(this));
     }
