@@ -20,6 +20,7 @@ let Application = PIXI.Application,
   speedCar = config.speedCar,
   level = 1,
   score = 0,
+  message,
   gamer;
 
 
@@ -45,27 +46,24 @@ PIXI.loader
   .add("images/wood.png")
   .load(setup);
 
-
-  
-
-
-
 function infoText() {
   let style = new TextStyle({
     fontFamily: "Arial",
-    fontSize: 20,
+    fontSize: 16,
     fill: "white",
-    stroke: '#ff3300',
-    strokeThickness: 4,
-    dropShadow: true,
-    dropShadowColor: "#000000",
-    dropShadowBlur: 4,
-    dropShadowAngle: Math.PI / 6,
-    dropShadowDistance: 6,
+    stroke: 'blue',
+    strokeThickness: 3,
     }),
-    message = new Text(`Level ${level} Lifes ${lifes} Score ${score}`, style);
-    message.position.set(10, 10);
-    app.stage.addChild(message);
+    author = new Text('FreeBSDwinXP', style);
+  message = new Text(`Level ${level} Lifes ${lifes} Score ${score}`, style);
+  message.position.set(5, height * 0.94);
+  author.style = {fill: "red", fontSize: 13}
+  author.position.set(width*0.83, height * 0.95)
+  app.stage.addChild(message, author);
+}
+
+function updateText() {
+  message.text = `Level ${level} Lifes ${lifes} Score ${score}`;
 }
 
 function correctCreation(lin, ind) {
@@ -147,47 +145,60 @@ function onHit (elem, massif) {
 
 
 function lost(play) {
+  score += height - play.y;
   play.position.set(width * 0.5, height * 0.92);
   lifes -= 1;
-  infoText();
+  updateText();
 }
 
 function win(play) {
+  score += height - play.y;
   play.position.set(width * 0.5, height * 0.92);
   lifes += 1;
   level += 1;
-  speedBalks += 0.1;
-  speedCar += 0.1;
-  infoText();
+  speedBalks += 0.3;
+  speedCar += 0.3;
+  console.log(`speedBalks is ${speedBalks}, speedCar is ${speedCar}`);
+  updateText();
 }
 
 function fps60() {
-  requestAnimationFrame(fps60);
-  gamer.animate();
-
-  if (gamer.cat.x < 0 || gamer.cat.x > width-gamer.cat.width) {
-    lost(gamer.cat);
-    console.log('oops you ride away');
-  }
-
-  if (gamer.cat.y < height/10-gamer.cat.height) {
-    win(gamer.cat);
-    console.log('win');
-    
-  }
   
-  
-  lines.forEach((item) => {
-    onHit(gamer.cat, item.elements);
-    if (hitTestRectangle(item.container, gamer.cat) && item instanceof River) {
-      if (!gamer.cat.onWood) {
-        lost(gamer.cat);
-        console.log('cat can not swim');
-      }
+
+  if (lifes <= 0) {
+    message.text = `Level ${level} Lifes ${lifes} Score ${score}                  YOU Lost`;
+    message.style = {fill: "red", fontSize: 22}
+
+  } else {
+    requestAnimationFrame(fps60);
+    gamer.animate();
+
+    if (gamer.cat.x < 0 || gamer.cat.x > width-gamer.cat.width) {
+      lost(gamer.cat);
+      console.log('oops you ride away');
     }
-    item.animate();
-    gamer.cat.onWood = false;
-  });
+  
+    if (gamer.cat.y < height/10-gamer.cat.height) {
+      win(gamer.cat);
+      console.log('Level UP!');
+    }
+    
+      lines.forEach((item) => {
+      onHit(gamer.cat, item.elements);
+      if (hitTestRectangle(item.container, gamer.cat) && item instanceof River) {
+        if (!gamer.cat.onWood) {
+          lost(gamer.cat);
+          console.log('cat can not swim');
+        }
+      }
+      item.animate();
+      gamer.cat.onWood = false;
+    });
+
+
+  }
+
+
 }
 
 

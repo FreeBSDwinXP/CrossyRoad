@@ -16,9 +16,6 @@ class Cat
         this.cat.preX = this.cat.x;
         this.cat.preY = this.cat.y;
 
-        this.fireSpeed = 10;    // Just one Easter Egg
-        this.fireCooldown = 0;  // Just one Easter Egg
-
         this.cat.onWood = false;
         this.cat.onTree = false;
         this.cat.onwoodX;
@@ -45,20 +42,6 @@ class Cat
         if (nextY > 0 && nextY < height-this.cat.height) {
             this.cat.position.y = nextY;
         }
-  
-        this.updateFire();  // Just one Easter Egg 
-    }
-
-    updateFire() // Just one Easter Egg
-    {
-        if (this.fireCooldown < this.fireSpeed)
-            this.fireCooldown++;
-
-        if (this.keyState[32] && this.fireCooldown >= this.fireSpeed)
-        {
-            let rocket = new Rocket(this.sprite.position.x, this.sprite.position.y);
-            this.fireCooldown = 0;
-        }
     }
 
     onKeyDown(key)
@@ -72,8 +55,6 @@ class Cat
             }
         else if (key.keyCode == 38 || key.keyCode == 40) // ArrowUp = 38; ArrowDown = 40;
             this.directionY = this.keyCodes[key.keyCode];
-            
-
     }
 
     onKeyUp(key)
