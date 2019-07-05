@@ -1,9 +1,13 @@
+import * as PIXI from '../lib/pixi.min.js';
+import {config} from '../config/config';
+import {randomInt} from '../spec/randomint';
+import {testFreeSpace} from '../spec/testFreeSpace';
 class Grass {
     constructor() {
-        this.container = new Container(); //Create container for line
-        this.line = new Graphics();//Create new line
+        this.container = new PIXI.Container(); //Create container for line
+        this.line = new PIXI.Graphics();//Create new line
         this.line.beginFill(0x4FEE0F);//Start fill and set green color to the next drawings
-        this.line.drawRect(0, 0, width, height / 10);//Draw the rectangle
+        this.line.drawRect(0, 0, config.width, config.height / 10);//Draw the rectangle
         this.line.endFill();//End fill
         this.container.addChild(this.line);//Add line to container
         this.woods = randomInt(config.treeMin, config.treeMax);
@@ -12,10 +16,10 @@ class Grass {
         
         (function() {
             do {
-                let pos = randomInt(0, width * .9);
-                this.element = new Sprite(resources["images/tree.png"].texture);//Bind image to tree
+                let pos = randomInt(0, config.width * 0.9);
+                this.element = new PIXI.Sprite(PIXI.loader.resources["images/tree.png"].texture);//Bind image to tree
                 this.element.position.set(pos, 0);//Locate tree in container
-                this.element.scale.set(width * 0.0007, height * 0.0009);//Zoom tree to our game field
+                this.element.scale.set(config.width * 0.0007, config.height * 0.0009);//Zoom tree to our game field
                 this.element.type = 'tree';
                 if (testFreeSpace(this.elements, this.element)
                 ) {
@@ -26,6 +30,9 @@ class Grass {
         }.bind(this))();
     }
 
+	//empty technical function to avoid errors
     animate() {
     }
 }
+
+export {Grass};
